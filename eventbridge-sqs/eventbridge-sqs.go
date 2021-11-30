@@ -25,7 +25,9 @@ func NewEventbridgeSqsStack(scope constructs.Construct, id string, props *Eventb
 		VisibilityTimeout: awscdk.Duration_Seconds(jsii.Number(300)),
 	})
 
-	eventBus := awsevents.NewEventBus(stack, jsii.String("MyEventBus"), &awsevents.EventBusProps{})
+	eventBus := awsevents.NewEventBus(stack, jsii.String("MyEventBus"), &awsevents.EventBusProps{
+		EventBusName: jsii.String("MyEventBus"),
+	})
 
 	rule := awsevents.NewRule(stack, jsii.String("myEventBusRule"), &awsevents.RuleProps{
 		Description: jsii.String("Log all events"),

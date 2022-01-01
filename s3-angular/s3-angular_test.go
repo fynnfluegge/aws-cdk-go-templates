@@ -1,26 +1,44 @@
 package main
 
-// import (
-// 	"testing"
+import (
+	"testing"
 
-// 	"github.com/aws/aws-cdk-go/awscdk"
-// 	"github.com/aws/aws-cdk-go/awscdk/assertions"
-// 	"github.com/aws/jsii-runtime-go"
-// )
+	"github.com/aws/aws-cdk-go/awscdk"
+	"github.com/aws/aws-cdk-go/awscdk/assertions"
+	"github.com/aws/jsii-runtime-go"
+)
 
-// example tests. To run these tests, uncomment this file along with the
-// example resource in s3-angular_test.go
-// func TestS3AngularStack(t *testing.T) {
-// 	// GIVEN
-// 	app := awscdk.NewApp(nil)
+func TestS3AngularStack(t *testing.T) {
+	// GIVEN
+	app := awscdk.NewApp(nil)
 
-// 	// WHEN
-// 	stack := NewS3AngularStack(app, "MyStack", nil)
+	// WHEN
+	stack := NewS3AngularStack(app, "MyStack", &S3AngularStackProps{
+		awscdk.StackProps{
+			Env: env(),
+		},
+		"www",
+		"mytestdomainname",
+	})
 
-// 	// THEN
-// 	template := assertions.Template_FromStack(stack)
+	// THEN
+	template := assertions.Template_FromStack(stack)
 
-// 	template.HasResourceProperties(jsii.String("AWS::SQS::Queue"), map[string]interface{}{
-// 		"VisibilityTimeout": 300,
-// 	})
-// }
+	template.HasResourceProperties(jsii.String("AWS::S3::Bucket"), map[string]interface{}{
+		"BucketName": "mytestdomainname",
+		"WebsiteConfiguration": map[string]interface{}{
+			"IndexDocument": "index.html",
+			"ErrorDocument": "error.html",
+		},
+	})
+
+	template.HasResourceProperties(jsii.String("AWS::Route53::RecordSet"), map[string]interface{}{
+		"Name": "www.mytestdomainname.",
+	})
+
+	template.HasResourceProperties(jsii.String("AWS::CloudFront::Distribution"), map[string]interface{}{
+		"DistributionConfig": map[string]interface{}{
+			"Aliases": []string{"www.mytestdomainname"},
+		},
+	})
+}

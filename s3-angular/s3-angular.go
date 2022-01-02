@@ -3,16 +3,16 @@ package main
 import (
 	"os"
 
-	"github.com/aws/aws-cdk-go/awscdk"
-	"github.com/aws/aws-cdk-go/awscdk/awscertificatemanager"
-	"github.com/aws/aws-cdk-go/awscdk/awscloudfront"
-	"github.com/aws/aws-cdk-go/awscdk/awsiam"
-	"github.com/aws/aws-cdk-go/awscdk/awsroute53"
-	"github.com/aws/aws-cdk-go/awscdk/awsroute53targets"
-	"github.com/aws/aws-cdk-go/awscdk/awss3"
-	"github.com/aws/aws-cdk-go/awscdk/awss3assets"
-	"github.com/aws/aws-cdk-go/awscdk/awss3deployment"
-	"github.com/aws/constructs-go/constructs/v3"
+	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awscertificatemanager"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awscloudfront"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsroute53"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsroute53targets"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awss3assets"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awss3deployment"
+	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
 
@@ -40,10 +40,6 @@ func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularSt
 		DomainName: &props.domainName,
 	})
 
-	awscdk.NewCfnOutput(stack, jsii.String("HostedZoneId"), &awscdk.CfnOutputProps{
-		Value: zone.HostedZoneId(),
-	})
-
 	bucket := awss3.NewBucket(stack, jsii.String("MyS3Bucket"), &awss3.BucketProps{
 		BucketName:           &props.domainName,
 		WebsiteIndexDocument: jsii.String("index.html"),
@@ -59,7 +55,7 @@ func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularSt
 		},
 	}))
 
-	awscdk.NewCfnOutput(stack, jsii.String("MyBucketName"), &awscdk.CfnOutputProps{
+	awscdk.NewCfnOutput(stack, jsii.String("MyBucketDomainName"), &awscdk.CfnOutputProps{
 		Value: bucket.BucketDomainName(),
 	})
 
@@ -69,7 +65,7 @@ func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularSt
 		Region:     jsii.String("us-east-1"), // Cloudfront only checks this region for certificates.
 	})
 
-	awscdk.NewCfnOutput(stack, jsii.String("Certificate"), &awscdk.CfnOutputProps{
+	awscdk.NewCfnOutput(stack, jsii.String("MyCertificateArn"), &awscdk.CfnOutputProps{
 		Value: certificateArn.CertificateArn(),
 	})
 
@@ -101,13 +97,13 @@ func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularSt
 		},
 	})
 
-	awscdk.NewCfnOutput(stack, jsii.String("CloudFrontWebDistributionId"), &awscdk.CfnOutputProps{
-		Value: distribution.DistributionId(),
+	awscdk.NewCfnOutput(stack, jsii.String("MyCloudFrontWebDistributionDomainName"), &awscdk.CfnOutputProps{
+		Value: distribution.DistributionDomainName(),
 	})
 
 	awsroute53.NewARecord(stack, jsii.String("MySiteAliasRecord"), &awsroute53.ARecordProps{
 		RecordName: &domain,
-		Target:     awsroute53.AddressRecordTarget_FromAlias(awsroute53targets.NewCloudFrontTarget(distribution)),
+		Target:     awsroute53.RecordTarget_FromAlias(awsroute53targets.NewCloudFrontTarget(distribution)),
 		Zone:       zone,
 	})
 
@@ -117,11 +113,11 @@ func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularSt
 		},
 		DestinationBucket: bucket,
 		Distribution:      distribution,
-		DistributionPaths: &[]*string{jsii.String("/*")},
+		DistributionPaths: jsii.Strings("/*"),
 	})
 
-	awscdk.NewCfnOutput(stack, jsii.String("Mys3BucketDeployment"), &awscdk.CfnOutputProps{
-		Value: deployment.Node().Id(),
+	awscdk.NewCfnOutput(stack, jsii.String("Mys3BucketDeploymentPath"), &awscdk.CfnOutputProps{
+		Value: deployment.Node().Path(),
 	})
 
 	return stack

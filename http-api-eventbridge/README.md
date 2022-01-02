@@ -1,14 +1,22 @@
-# Welcome to your CDK Go project!
+# Amazon API Gateway HTTP API to Amazon EventBridge
 
-This is a blank project for Go development with CDK.
+This pattern creates an HTTP API endpoint that directly integrates with Amazon EventBridge
 
-**NOTICE**: Go support is still in Developer Preview. This implies that APIs may
-change while we address early feedback from the community. We would love to hear
-about your experience through GitHub issues.
+## How it works
 
-## Useful commands
+This pattern creates an Amazon API gateway HTTP API endpoint. The endpoint uses service integrations to directly connect to Amazon EventBridge. An EventBridge rule sends all events to Cloudwatch Logs.
 
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
- * `go test`         run unit tests
+## Testing
+
+To test the endpoint first send data using the following command. Be sure to update the endpoint with endpoint of your stack.
+
+```
+curl --location --request POST '<your api endpoint>' --header 'Content-Type: application/json' \
+--data-raw '{
+    "Detail":{
+        "message": "This is my test"
+    }
+}'
+```
+
+Then check the logs in Cloudwatch logs

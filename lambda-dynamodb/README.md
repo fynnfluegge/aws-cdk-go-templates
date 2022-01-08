@@ -1,14 +1,31 @@
-# Welcome to your CDK Go project!
+# AWS Lambda to Amazon DynamoDB
 
-This is a blank project for Go development with CDK.
+This project contains a sample AWS Cloud Development Kit (AWS CDK) template for deploying a Lambda function that makes puts to a DynamoDB table.
 
-**NOTICE**: Go support is still in Developer Preview. This implies that APIs may
-change while we address early feedback from the community. We would love to hear
-about your experience through GitHub issues.
+## How it works
 
-## Useful commands
+This is similar to the `lambda-dynamodb` example but is implemented in CDK.
 
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
- * `go test`         run unit tests
+- A Lambda function is invoked by an event integration or CLI command
+- The Lambda function "stringifies" the event payload
+- The Function uses the AWS SDK to perform a `put` command on a DynamoDB table
+- The name of the DynamoDB table is passed to the Lambda function via an environment variable named `DatabaseTable`
+- The Lambda function is granted `PutItem` permissions, defined in CDK via `dynamoTable.grantWriteData(lambdaPutDynamoDB);`
+
+## Testing
+
+Run the following Lambda CLI invoke command to invoke the function. Note, you must edit the {LambdFunctionArn} placeholder with the ARN of the deployed Lambda function. This is provided in the stack outputs. Note that this requires AWS CLI v2.
+
+```bash
+aws lambda invoke --function-name "LAMBDA_FUNCTION_ARN" \
+--invocation-type Event \
+--payload '{ "Metadata": "Hello" }' \
+--cli-binary-format raw-in-base64-out \
+response.json
+# Example
+aws lambda invoke --function-name "arn:aws:lambda:ap-southeast-2:123456789123:function:CdkStack-lambdaPutDynamoDBHandler1A123456-fooBarBazFoo" \
+--invocation-type Event \
+--payload '{ "Metadata": "Hello" }' \
+--cli-binary-format raw-in-base64-out \
+response.json
+```

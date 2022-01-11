@@ -22,10 +22,4 @@ aws lambda invoke --function-name "LAMBDA_FUNCTION_ARN" \
 --payload '{ "Metadata": "Hello" }' \
 --cli-binary-format raw-in-base64-out \
 response.json
-# Example
-aws lambda invoke --function-name "arn:aws:lambda:ap-southeast-2:123456789123:function:CdkStack-lambdaPutDynamoDBHandler1A123456-fooBarBazFoo" \
---invocation-type Event \
---payload '{ "Metadata": "Hello" }' \
---cli-binary-format raw-in-base64-out \
-response.json
 ```

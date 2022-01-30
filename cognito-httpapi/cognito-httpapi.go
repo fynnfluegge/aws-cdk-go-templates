@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/aws/aws-cdk-go/awscdk"
-	"github.com/aws/aws-cdk-go/awscdk/awsapigatewayv2"
-	"github.com/aws/aws-cdk-go/awscdk/awscognito"
-	"github.com/aws/constructs-go/constructs/v3"
+	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awscognito"
+	"github.com/aws/aws-cdk-go/awscdkapigatewayv2alpha/v2"
+	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
 
@@ -32,10 +32,6 @@ func NewCognitoHttpapiStack(scope constructs.Construct, id string, props *Cognit
 			Email: &awscognito.StandardAttribute{
 				Required: jsii.Bool(true),
 				Mutable:  jsii.Bool(false),
-			},
-			EmailVerified: &awscognito.StandardAttribute{
-				Required: jsii.Bool(false),
-				Mutable:  jsii.Bool(true),
 			},
 		},
 		SignInAliases: &awscognito.SignInAliases{
@@ -77,18 +73,18 @@ func NewCognitoHttpapiStack(scope constructs.Construct, id string, props *Cognit
 		},
 	})
 
-	httpApi := awsapigatewayv2.NewHttpApi(stack, jsii.String("MyHttpApi"), &awsapigatewayv2.HttpApiProps{
+	httpApi := awscdkapigatewayv2alpha.NewHttpApi(stack, jsii.String("MyHttpApi"), &awscdkapigatewayv2alpha.HttpApiProps{
 		ApiName: jsii.String("MyHttpApi"),
-		CorsPreflight: &awsapigatewayv2.CorsPreflightOptions{
-			AllowMethods: &[]awsapigatewayv2.CorsHttpMethod{
-				awsapigatewayv2.CorsHttpMethod_GET,
+		CorsPreflight: &awscdkapigatewayv2alpha.CorsPreflightOptions{
+			AllowMethods: &[]awscdkapigatewayv2alpha.CorsHttpMethod{
+				awscdkapigatewayv2alpha.CorsHttpMethod_GET,
 			},
 		},
 	})
 
-	awsapigatewayv2.NewHttpAuthorizer(stack, jsii.String("MyHttpAuthorizer"), &awsapigatewayv2.HttpAuthorizerProps{
+	awscdkapigatewayv2alpha.NewHttpAuthorizer(stack, jsii.String("MyHttpAuthorizer"), &awscdkapigatewayv2alpha.HttpAuthorizerProps{
 		AuthorizerName: jsii.String("MyHttpAuthorizer"),
-		Type:           awsapigatewayv2.HttpAuthorizerType_JWT,
+		Type:           awscdkapigatewayv2alpha.HttpAuthorizerType_JWT,
 		HttpApi:        httpApi,
 		JwtIssuer:      jsii.String("https://cognito-idp.eu-central-1.amazonaws.com/" + *userpool.UserPoolId()),
 		JwtAudience:    jsii.Strings(*userpool.UserPoolId()),

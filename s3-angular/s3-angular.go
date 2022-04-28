@@ -18,8 +18,8 @@ import (
 
 type S3AngularStackProps struct {
 	awscdk.StackProps
-	subDomain  string
-	domainName string
+	subDomain string
+	domain    string
 }
 
 func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularStackProps) awscdk.Stack {
@@ -30,18 +30,18 @@ func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularSt
 
 	stack := awscdk.NewStack(scope, &id, &sprops)
 
-	domain := props.subDomain + "." + props.domainName
+	domain := props.subDomain + "." + props.domain
 
 	cloudfrontOAI := awscloudfront.NewOriginAccessIdentity(stack, jsii.String("MyOriginAccessIdentity"), &awscloudfront.OriginAccessIdentityProps{
 		Comment: jsii.String("OAI for " + id),
 	})
 
 	zone := awsroute53.HostedZone_FromLookup(stack, jsii.String("MyHostedZone"), &awsroute53.HostedZoneProviderProps{
-		DomainName: &props.domainName,
+		DomainName: &props.domain,
 	})
 
 	bucket := awss3.NewBucket(stack, jsii.String("MyS3Bucket"), &awss3.BucketProps{
-		BucketName:           &props.domainName,
+		BucketName:           &props.domain,
 		WebsiteIndexDocument: jsii.String("index.html"),
 		WebsiteErrorDocument: jsii.String("error.html"),
 		PublicReadAccess:     jsii.Bool(true),
@@ -131,7 +131,7 @@ func main() {
 			Env: env(),
 		},
 		app.Node().TryGetContext(jsii.String("subDomain")).(string),
-		app.Node().TryGetContext(jsii.String("domainName")).(string),
+		app.Node().TryGetContext(jsii.String("domain")).(string),
 	})
 
 	app.Synth(nil)

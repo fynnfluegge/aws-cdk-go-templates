@@ -27,6 +27,8 @@ The domain for the static site (i.e. mystaticsite.com) must be configured as a h
 $ npm install -g aws-cdk
 $ npm install
 $ npm run build
+$ export AWS_ACCOUNT=xxx
+$ export AWS_REGION=xxx
 $ cdk deploy -c accountId=123456789 -c domain=mystaticsite.com -c subdomain=www
 ```
 

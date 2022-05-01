@@ -43,7 +43,7 @@ func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularSt
 	bucket := awss3.NewBucket(stack, jsii.String("MyS3Bucket"), &awss3.BucketProps{
 		BucketName:           &props.domain,
 		WebsiteIndexDocument: jsii.String("index.html"),
-		WebsiteErrorDocument: jsii.String("error.html"),
+		WebsiteErrorDocument: jsii.String("index.html"),
 		PublicReadAccess:     jsii.Bool(true),
 	})
 

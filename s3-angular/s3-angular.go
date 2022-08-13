@@ -80,14 +80,22 @@ func NewS3AngularStack(scope constructs.Construct, id string, props *S3AngularSt
 
 	distribution := awscloudfront.NewCloudFrontWebDistribution(stack, jsii.String("MyCloudFrontDistribution"), &awscloudfront.CloudFrontWebDistributionProps{
 		ViewerCertificate: viewerCertificate,
+		ErrorConfigurations: &[]*awscloudfront.CfnDistribution_CustomErrorResponseProperty{
+			{
+				ErrorCode:          jsii.Number(403),
+				ResponseCode:       jsii.Number(200),
+				ErrorCachingMinTtl: jsii.Number(300),
+				ResponsePagePath:   jsii.String("/index.html"),
+			},
+		},
 		OriginConfigs: &[]*awscloudfront.SourceConfiguration{
-			&awscloudfront.SourceConfiguration{
+			{
 				S3OriginSource: &awscloudfront.S3OriginConfig{
 					S3BucketSource:       bucket,
 					OriginAccessIdentity: cloudfrontOAI,
 				},
 				Behaviors: &[]*awscloudfront.Behavior{
-					&awscloudfront.Behavior{
+					{
 						IsDefaultBehavior: jsii.Bool(true),
 						Compress:          jsii.Bool(true),
 						AllowedMethods:    awscloudfront.CloudFrontAllowedMethods_GET_HEAD_OPTIONS,

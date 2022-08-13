@@ -19,7 +19,7 @@ $ export AWS_REGION=xxx
 $ cdk deploy -c accountId=123456789 -c domain=mystaticsite.com -c subdomain=www
 ```
 
-## Test
+## Run Test
 ```shell
 $ go test -run TestS3AngularStack -v
 ```

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awscognito"
 	"github.com/aws/aws-cdk-go/awscdkapigatewayv2alpha/v2"
@@ -40,7 +42,14 @@ func NewCognitoHttpapiStack(scope constructs.Construct, id string, props *Cognit
 		SelfSignUpEnabled: jsii.Bool(true),
 	})
 
-	awscognito.NewUserPoolClient(stack, jsii.String("MyUserPoolClient"), &awscognito.UserPoolClientProps{
+	userPoolDomain := awscognito.NewUserPoolDomain(stack, jsii.String("MyUserPoolDomain"), &awscognito.UserPoolDomainProps{
+		UserPool: userpool,
+		CognitoDomain: &awscognito.CognitoDomainOptions{
+			DomainPrefix: jsii.String("myauth"),
+		},
+	})
+
+	userPoolClient := awscognito.NewUserPoolClient(stack, jsii.String("MyUserPoolClient"), &awscognito.UserPoolClientProps{
 		UserPoolClientName: jsii.String("MyUserPoolClient"),
 		UserPool:           userpool,
 		GenerateSecret:     jsii.Bool(false),
@@ -66,13 +75,6 @@ func NewCognitoHttpapiStack(scope constructs.Construct, id string, props *Cognit
 		},
 	})
 
-	userPoolDomain := awscognito.NewUserPoolDomain(stack, jsii.String("MyUserPoolDomain"), &awscognito.UserPoolDomainProps{
-		UserPool: userpool,
-		CognitoDomain: &awscognito.CognitoDomainOptions{
-			DomainPrefix: jsii.String("myauth"),
-		},
-	})
-
 	httpApi := awscdkapigatewayv2alpha.NewHttpApi(stack, jsii.String("MyHttpApi"), &awscdkapigatewayv2alpha.HttpApiProps{
 		ApiName: jsii.String("MyHttpApi"),
 		CorsPreflight: &awscdkapigatewayv2alpha.CorsPreflightOptions{
@@ -86,13 +88,17 @@ func NewCognitoHttpapiStack(scope constructs.Construct, id string, props *Cognit
 		AuthorizerName: jsii.String("MyHttpAuthorizer"),
 		Type:           awscdkapigatewayv2alpha.HttpAuthorizerType_JWT,
 		HttpApi:        httpApi,
-		JwtIssuer:      jsii.String("https://cognito-idp.eu-central-1.amazonaws.com/" + *userpool.UserPoolId()),
+		JwtIssuer:      jsii.String("https://cognito-idp." + *props.Env.Region + ".amazonaws.com/" + *userpool.UserPoolId()),
 		JwtAudience:    jsii.Strings(*userpool.UserPoolId()),
 		IdentitySource: jsii.Strings("$request.header.Authorization"),
 	})
 
 	awscdk.NewCfnOutput(stack, jsii.String("authUrl"), &awscdk.CfnOutputProps{
-		Value: jsii.String("https://" + *userPoolDomain.DomainName() + ".auth.eu-central-1.amazoncognito.com/login"),
+		Value: jsii.String("https://" + *userPoolDomain.DomainName() + ".auth." + *props.Env.Region + ".amazoncognito.com/login"),
+	})
+
+	awscdk.NewCfnOutput(stack, jsii.String("UserPoolClientId"), &awscdk.CfnOutputProps{
+		Value: userPoolClient.UserPoolClientId(),
 	})
 
 	return stack
@@ -110,29 +116,8 @@ func main() {
 	app.Synth(nil)
 }
 
-// env determines the AWS environment (account+region) in which our stack is to
-// be deployed. For more information see: https://docs.aws.amazon.com/cdk/latest/guide/environments.html
 func env() *awscdk.Environment {
-	// If unspecified, this stack will be "environment-agnostic".
-	// Account/Region-dependent features and context lookups will not work, but a
-	// single synthesized template can be deployed anywhere.
-	//---------------------------------------------------------------------------
-	return nil
-
-	// Uncomment if you know exactly what account and region you want to deploy
-	// the stack to. This is the recommendation for production stacks.
-	//---------------------------------------------------------------------------
-	// return &awscdk.Environment{
-	//  Account: jsii.String("123456789012"),
-	//  Region:  jsii.String("us-east-1"),
-	// }
-
-	// Uncomment to specialize this stack for the AWS Account and Region that are
-	// implied by the current CLI configuration. This is recommended for dev
-	// stacks.
-	//---------------------------------------------------------------------------
-	// return &awscdk.Environment{
-	//  Account: jsii.String(os.Getenv("CDK_DEFAULT_ACCOUNT")),
-	//  Region:  jsii.String(os.Getenv("CDK_DEFAULT_REGION")),
-	// }
+	return &awscdk.Environment{
+		Region: jsii.String(os.Getenv("AWS_REGION")),
+	}
 }

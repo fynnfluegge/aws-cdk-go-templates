@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/aws/aws-cdk-go/awscdk"
-	"github.com/aws/aws-cdk-go/awscdk/awslambda"
-	"github.com/aws/aws-cdk-go/awscdk/awslambdaeventsources"
-	"github.com/aws/aws-cdk-go/awscdk/awslambdago"
-	"github.com/aws/aws-cdk-go/awscdk/awssqs"
-	"github.com/aws/constructs-go/constructs/v3"
+	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awslambdaeventsources"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
+	"github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2"
+	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
 
@@ -28,16 +28,15 @@ func NewSqsLambdaStack(scope constructs.Construct, id string, props *SqsLambdaSt
 
 	batchSize := 10.0
 
-	awslambdago.NewGoFunction(stack, jsii.String("myGoHandler"), &awslambdago.GoFunctionProps{
-		Description: jsii.String("QueueConsumerFunction function"),
-		Runtime:     awslambda.Runtime_GO_1_X(),
-		Entry:       jsii.String("./sqs-consumer-handler"),
+	awscdklambdagoalpha.NewGoFunction(stack, jsii.String("myGoHandler"), &awscdklambdagoalpha.GoFunctionProps{
+		Runtime: awslambda.Runtime_GO_1_X(),
+		Entry:   jsii.String("./sqs-consumer-handler"),
 		Events: &[]awslambda.IEventSource{
 			awslambdaeventsources.NewSqsEventSource(queue, &awslambdaeventsources.SqsEventSourceProps{
 				BatchSize: &batchSize,
 			}),
 		},
-		Bundling: &awslambdago.BundlingOptions{
+		Bundling: &awscdklambdagoalpha.BundlingOptions{
 			GoBuildFlags: &[]*string{jsii.String(`-ldflags "-s -w"`)},
 		},
 	})

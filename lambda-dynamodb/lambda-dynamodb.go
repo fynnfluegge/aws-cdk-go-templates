@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/aws/aws-cdk-go/awscdk"
-	"github.com/aws/aws-cdk-go/awscdk/awsdynamodb"
-	"github.com/aws/aws-cdk-go/awscdk/awsiam"
-	"github.com/aws/aws-cdk-go/awscdk/awslambda"
-	"github.com/aws/aws-cdk-go/awscdk/awslambdago"
+	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsdynamodb"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
+	"github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/constructs-go/constructs/v3"
+	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
 
@@ -29,12 +29,11 @@ func NewLambdaDynamodbStack(scope constructs.Construct, id string, props *Lambda
 		},
 	})
 
-	awslambdago.NewGoFunction(stack, jsii.String("myGoHandler"), &awslambdago.GoFunctionProps{
-		Description: aws.String("myLambdaHandler function"),
-		Runtime:     awslambda.Runtime_GO_1_X(),
-		Entry:       aws.String("./lambda-handler"),
-		Bundling: &awslambdago.BundlingOptions{
-			GoBuildFlags: &[]*string{aws.String(`-ldflags "-s -w"`)},
+	awscdklambdagoalpha.NewGoFunction(stack, jsii.String("myGoHandler"), &awscdklambdagoalpha.GoFunctionProps{
+		Runtime: awslambda.Runtime_GO_1_X(),
+		Entry:   jsii.String("./lambda-handler"),
+		Bundling: &awscdklambdagoalpha.BundlingOptions{
+			GoBuildFlags: &[]*string{jsii.String(`-ldflags "-s -w"`)},
 		},
 		Role: dynamoDBRole,
 	})

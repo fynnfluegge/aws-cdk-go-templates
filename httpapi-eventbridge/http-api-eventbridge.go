@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/aws/aws-cdk-go/awscdk"
-	"github.com/aws/aws-cdk-go/awscdk/awsapigatewayv2"
-	"github.com/aws/aws-cdk-go/awscdk/awsevents"
-	"github.com/aws/aws-cdk-go/awscdk/awseventstargets"
-	"github.com/aws/aws-cdk-go/awscdk/awsiam"
-	"github.com/aws/aws-cdk-go/awscdk/awslogs"
-	"github.com/aws/constructs-go/constructs/v3"
+	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsapigatewayv2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsevents"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awseventstargets"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awslogs"
+	"github.com/aws/aws-cdk-go/awscdkapigatewayv2alpha/v2"
+	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
 
@@ -40,7 +41,7 @@ func NewHttpApiEventbridgeStack(scope constructs.Construct, id string, props *Ht
 
 	eventLoggerRule.AddTarget(awseventstargets.NewCloudWatchLogGroup(logGroup, &awseventstargets.LogGroupProps{}))
 
-	httpApi := awsapigatewayv2.NewHttpApi(stack, jsii.String("myHttpApi"), &awsapigatewayv2.HttpApiProps{
+	httpApi := awscdkapigatewayv2alpha.NewHttpApi(stack, jsii.String("myHttpApi"), &awscdkapigatewayv2alpha.HttpApiProps{
 		ApiName: jsii.String("myHttpApi"),
 	})
 

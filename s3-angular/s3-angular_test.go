@@ -28,7 +28,7 @@ func TestS3AngularStack(t *testing.T) {
 		"BucketName": "mytestdomainname",
 		"WebsiteConfiguration": map[string]interface{}{
 			"IndexDocument": "index.html",
-			"ErrorDocument": "error.html",
+			"ErrorDocument": "index.html",
 		},
 	})
 

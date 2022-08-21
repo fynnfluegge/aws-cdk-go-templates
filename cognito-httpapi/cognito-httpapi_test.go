@@ -26,11 +26,12 @@ func TestCognitoHttpapiStack(t *testing.T) {
 		"ProtocolType": "HTTP",
 	})
 
-	template.HasResourceProperties(jsii.String("AWS::ApiGatewayV2::Authorizer"), map[string]interface{}{})
+	template.HasResourceProperties(jsii.String("AWS::ApiGatewayV2::Authorizer"), map[string]interface{}{
+		"AuthorizerType": "jwt",
+		"IdentitySource": jsii.Strings("$request.header.Authorization"),
+	})
 
 	template.HasResourceProperties(jsii.String("AWS::Cognito::UserPoolClient"), map[string]interface{}{
-		"CallbackURLs":       jsii.Strings("https://oauth.pstmn.io/v1/callback"),
-		"LogoutURLs":         jsii.Strings("https://oauth.pstmn.io/v1/callback"),
 		"AllowedOAuthFlows":  jsii.Strings("implicit", "code"),
 		"AllowedOAuthScopes": jsii.Strings("email", "openid", "profile"),
 	})

@@ -26,14 +26,12 @@ func NewSqsLambdaStack(scope constructs.Construct, id string, props *SqsLambdaSt
 		QueueName:         jsii.String("MySqsQueue"),
 	})
 
-	batchSize := 10.0
-
 	awscdklambdagoalpha.NewGoFunction(stack, jsii.String("myGoHandler"), &awscdklambdagoalpha.GoFunctionProps{
 		Runtime: awslambda.Runtime_GO_1_X(),
 		Entry:   jsii.String("./sqs-consumer-handler"),
 		Events: &[]awslambda.IEventSource{
 			awslambdaeventsources.NewSqsEventSource(queue, &awslambdaeventsources.SqsEventSourceProps{
-				BatchSize: &batchSize,
+				BatchSize: jsii.Number(10.0),
 			}),
 		},
 		Bundling: &awscdklambdagoalpha.BundlingOptions{

@@ -57,8 +57,6 @@ func NewHttpApiEventbridgeStack(scope constructs.Construct, id string, props *Ht
 		}),
 	)
 
-	timeOutMillis := 10000.0
-
 	eventbridgeIntegration := awsapigatewayv2.NewCfnIntegration(stack, jsii.String("myEventbridgeIntegration"), &awsapigatewayv2.CfnIntegrationProps{
 		ApiId:              httpApi.HttpApiId(),
 		IntegrationType:    jsii.String("AWS_PROXY"),
@@ -71,7 +69,7 @@ func NewHttpApiEventbridgeStack(scope constructs.Construct, id string, props *Ht
 			"EventBusName": *eventBus.EventBusArn(),
 		},
 		PayloadFormatVersion: jsii.String("1.0"),
-		TimeoutInMillis:      &timeOutMillis,
+		TimeoutInMillis:      jsii.Number(10000.0),
 	})
 
 	awsapigatewayv2.NewCfnRoute(stack, jsii.String("myEventRoute"), &awsapigatewayv2.CfnRouteProps{

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awscertificatemanager"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awscloudfront"
@@ -146,8 +144,5 @@ func main() {
 }
 
 func env() *awscdk.Environment {
-	return &awscdk.Environment{
-		Account: jsii.String(os.Getenv("AWS_ACCOUNT")),
-		Region:  jsii.String(os.Getenv("AWS_REGION")),
-	}
+	return nil
 }

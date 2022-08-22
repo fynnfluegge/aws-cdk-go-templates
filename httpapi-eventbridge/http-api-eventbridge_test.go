@@ -22,7 +22,7 @@ func TestHttpApiEventbridgeStack(t *testing.T) {
 
 	template.HasResourceProperties(jsii.String("AWS::Events::Rule"), map[string]interface{}{})
 
-	template.HasResourceProperties(jsii.String("AWS::ApiGatewayV2::Api"), map[string]interface{}{})
+	template.HasResource(jsii.String("AWS::ApiGatewayV2::Api"), map[string]interface{}{})
 
 	template.HasResourceProperties(jsii.String("AWS::IAM::Role"), map[string]interface{}{
 		"AssumeRolePolicyDocument": map[string]interface{}{

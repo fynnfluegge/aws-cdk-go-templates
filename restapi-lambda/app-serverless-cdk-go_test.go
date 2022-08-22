@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"testing"
 
-	"github.com/aws/aws-cdk-go/awscdk"
-	"github.com/stretchr/testify/assert"
-	"github.com/tidwall/gjson"
+	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/assertions"
+	"github.com/aws/jsii-runtime-go"
 )
 
 func TestAppServerlessCdkGoStack(t *testing.T) {
@@ -17,12 +16,17 @@ func TestAppServerlessCdkGoStack(t *testing.T) {
 	stack := NewAppServerlessCdkGoStack(app, "MyStack", nil)
 
 	// THEN
-	bytes, err := json.Marshal(app.Synth(nil).GetStackArtifact(stack.ArtifactId()).Template())
-	if err != nil {
-		t.Error(err)
-	}
+	template := assertions.Template_FromStack(stack)
 
-	template := gjson.ParseBytes(bytes)
-	displayName := template.Get("Resources.MyTopic86869434.Properties.DisplayName").String()
-	assert.Equal(t, "MyCoolTopic", displayName)
+	template.HasResourceProperties(jsii.String("AWS::Lambda::Function"), map[string]interface{}{
+		"Runtime": "go1.x",
+	})
+
+	template.HasResourceProperties(jsii.String("AWS::ApiGateway::RestApi"), map[string]interface{}{
+		"Name": "myGoApi",
+	})
+
+	template.HasResourceProperties(jsii.String("AWS::ApiGateway::Resource"), map[string]interface{}{
+		"PathPart": "hello-world",
+	})
 }

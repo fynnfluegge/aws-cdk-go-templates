@@ -13,7 +13,11 @@ func TestApigwSqsStack(t *testing.T) {
 	app := awscdk.NewApp(nil)
 
 	// WHEN
-	stack := NewApigwSqsStack(app, "MyStack", nil)
+	stack := NewApigwSqsStack(app, "MyStack", &ApigwSqsStackProps{
+		awscdk.StackProps{
+			Env: env(),
+		},
+	})
 
 	// THEN
 	template := assertions.Template_FromStack(stack)

@@ -13,7 +13,11 @@ func TestHttpApiEventbridgeStack(t *testing.T) {
 	app := awscdk.NewApp(nil)
 
 	// WHEN
-	stack := NewHttpApiEventbridgeStack(app, "MyStack", nil)
+	stack := NewHttpApiEventbridgeStack(app, "MyStack", &HttpApiEventbridgeStackProps{
+		awscdk.StackProps{
+			Env: env(),
+		},
+	})
 
 	// THEN
 	template := assertions.Template_FromStack(stack)

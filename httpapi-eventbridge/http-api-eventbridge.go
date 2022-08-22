@@ -33,7 +33,7 @@ func NewHttpApiEventbridgeStack(scope constructs.Construct, id string, props *Ht
 		Description: jsii.String("Log all events"),
 		EventBus:    eventBus,
 		EventPattern: &awsevents.EventPattern{
-			Region: &[]*string{props.Env.Region},
+			Region: jsii.Strings(*props.Env.Region),
 		},
 	})
 
@@ -54,8 +54,8 @@ func NewHttpApiEventbridgeStack(scope constructs.Construct, id string, props *Ht
 	apiRole.AddToPolicy(
 		awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
 			Effect:    awsiam.Effect_ALLOW,
-			Resources: &[]*string{jsii.String(*eventBus.EventBusArn())},
-			Actions:   &[]*string{jsii.String("events:putEvents")},
+			Resources: jsii.Strings(*eventBus.EventBusArn()),
+			Actions:   jsii.Strings("events:putEvents"),
 		}),
 	)
 

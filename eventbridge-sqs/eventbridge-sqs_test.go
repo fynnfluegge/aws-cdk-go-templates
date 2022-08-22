@@ -13,7 +13,11 @@ func TestEventbridgeSqsStack(t *testing.T) {
 	app := awscdk.NewApp(nil)
 
 	// WHEN
-	stack := NewEventbridgeSqsStack(app, "MyStack", nil)
+	stack := NewEventbridgeSqsStack(app, "MyStack", &EventbridgeSqsStackProps{
+		awscdk.StackProps{
+			Env: env(),
+		},
+	})
 
 	// THEN
 	template := assertions.Template_FromStack(stack)

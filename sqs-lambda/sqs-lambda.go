@@ -35,7 +35,7 @@ func NewSqsLambdaStack(scope constructs.Construct, id string, props *SqsLambdaSt
 			}),
 		},
 		Bundling: &awscdklambdagoalpha.BundlingOptions{
-			GoBuildFlags: &[]*string{jsii.String(`-ldflags "-s -w"`)},
+			GoBuildFlags: jsii.Strings(`-ldflags "-s -w"`),
 		},
 	})
 

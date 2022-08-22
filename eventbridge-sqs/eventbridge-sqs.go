@@ -22,7 +22,6 @@ func NewEventbridgeSqsStack(scope constructs.Construct, id string, props *Eventb
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
 
-	// example resource
 	queue := awssqs.NewQueue(stack, jsii.String("EventbridgeSqsQueue"), &awssqs.QueueProps{
 		VisibilityTimeout: awscdk.Duration_Seconds(jsii.Number(300)),
 	})
@@ -35,9 +34,9 @@ func NewEventbridgeSqsStack(scope constructs.Construct, id string, props *Eventb
 		Description: jsii.String("Log all events"),
 		EventBus:    eventBus,
 		EventPattern: &awsevents.EventPattern{
-			Source:     &[]*string{jsii.String("MyCdkApp")},
-			DetailType: &[]*string{jsii.String("message-for-queue")},
-			Region:     &[]*string{props.Env.Region},
+			Source:     jsii.Strings("MyCdkApp"),
+			DetailType: jsii.Strings("message-for-queue"),
+			Region:     jsii.Strings(*props.Env.Region),
 		},
 	})
 

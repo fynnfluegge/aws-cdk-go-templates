@@ -25,4 +25,12 @@ func TestApigwSqsStack(t *testing.T) {
 	template.HasResourceProperties(jsii.String("AWS::SQS::Queue"), map[string]interface{}{
 		"VisibilityTimeout": 300,
 	})
+
+	template.HasResourceProperties(jsii.String("AWS::ApiGateway::RestApi"), map[string]interface{}{
+		"Name": "myRestApi",
+	})
+
+	template.HasResourceProperties(jsii.String("AWS::ApiGateway::Resource"), map[string]interface{}{
+		"PathPart": "test",
+	})
 }

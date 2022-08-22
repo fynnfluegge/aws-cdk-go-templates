@@ -27,7 +27,7 @@ func TestCognitoHttpapiStack(t *testing.T) {
 	})
 
 	template.HasResourceProperties(jsii.String("AWS::ApiGatewayV2::Authorizer"), map[string]interface{}{
-		"AuthorizerType": "jwt",
+		"AuthorizerType": "JWT",
 		"IdentitySource": jsii.Strings("$request.header.Authorization"),
 	})
 

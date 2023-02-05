@@ -1,4 +1,4 @@
-# Amazon Cognito to Amazon API Gateway HTTP APIs (JWT)
+# Amazon Cognito to Amazon API Gateway HTTP API (JWT)
 
 This example deploys a Cognito user pool and an HTTP API secured with a JWT authorizer based on the created Cognito user pool as the related Jwt audience.
 

@@ -1,17 +1,25 @@
 # Amazon Cognito to Amazon API Gateway HTTP APIs (JWT)
 
+This example deploys a Cognito user pool and an HTTP API secured with a JWT authorizer based on the created Cognito user pool as the related Jwt audience.
+
+Important: this application uses various AWS services and there are costs associated with these services after the Free Tier usage - please see the AWS Pricing page for details. You are responsible for any AWS costs incurred. No warranty is implied in this example.
+
+## Deployment
+```
+cdk deploy
+```
+
 ## Testing
 
-The stack will output the **authorization domain** and **client id** required for using authorization via postman. Configure postman authorization as follows:
-
-> **Client ID**: Get the Client ID from recently created Cognito Pool > App Integarion.
+The stack will output the **authorization url** and **client id** required for using authorization via postman after deployment. Configure postman authorization as follows:
 
 
 ![Postman authentication](https://serverlessland.s3.amazonaws.com/assets/patterns/patterns-cognito-httpapi1.png)
 
-1. The first time you get a new token, click **Sign Up** on the bottom of the hosted URL
+### 1. The first time you get a new token, click **Sign Up** on the bottom of the hosted URL
 
 ![Postman authentication](https://serverlessland.s3.amazonaws.com/assets/patterns/patterns-cognito-httpapi2.png)
 
-2. Retrieve code from your email
-3. After verifying the code you can login and then be returned to postman with the proper access token.
+### 2. Retrieve code from your email
+### 3. After verifying the code you can login and then be returned to postman with the proper access token.
+### 4. With this access token you can access the secured httapi from the deployed stack.

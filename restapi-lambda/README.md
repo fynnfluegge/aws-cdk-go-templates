@@ -1,4 +1,5 @@
 # Amazon API Gateway Rest API to AWS Lambda
+
 This example creates a rest api toghether with a simple lambda function returning *hello world!*
 
 ### Deploy
